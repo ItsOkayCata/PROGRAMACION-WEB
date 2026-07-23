@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Help Desk | TechSolutions SAC</title>
+<style>
+  :root{
+    --navy:#0f2942;
+    --navy-2:#16385a;
+    --steel:#3d5a73;
+    --accent:#e8590c;
+    --accent-2:#ff8535;
+    --bg:#eef2f5;
+    --panel:#ffffff;
+    --line:#dbe2e8;
+    --text:#1c2b36;
+    --muted:#5b7285;
+    --ok:#1a7d4f;
+    --warn:#b8860b;
+    --danger:#c73e3e;
+    --radius:8px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Segoe UI', Roboto, Arial, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+  }
+  .hidden{display:none !important;}
+
+  /* ---------- LOGIN ---------- */
+  #login-screen{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,var(--navy) 0%,var(--navy-2) 55%,var(--steel) 100%);
+  }
+  .login-card{
+    background:var(--panel);
+    width:380px;
+    max-width:92vw;
+    border-radius:var(--radius);
+    padding:36px 32px;
+    box-shadow:0 20px 50px rgba(0,0,0,0.35);
+  }
+  .login-card h1{
+    font-size:22px;
+    margin:0 0 2px 0;
+    color:var(--navy);
+  }
+  .login-card .tag{
+    display:inline-block;
+    background:var(--accent);
+    color:#fff;
+    font-size:11px;
+    letter-spacing:0.06em;
+    padding:2px 8px;
+    border-radius:4px;
+    margin-bottom:18px;
+  }
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px;font-weight:600;}
+  .field input, .field select{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:6px;
+    font-size:14px;
+    background:#fbfcfd;
+  }
+  .field input:focus, .field select:focus{outline:2px solid var(--accent);outline-offset:1px;}
+  .btn{
+    display:inline-block;
+    border:none;
+    border-radius:6px;
+    padding:10px 18px;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    transition:filter .15s ease;
+  }
+  .btn:hover{filter:brightness(1.08);}
+  .btn-primary{background:var(--accent);color:#fff;width:100%;padding:12px;font-size:15px;}
+  .btn-ghost{background:transparent;color:var(--navy);border:1px solid var(--line);}
+  .btn-small{padding:6px 10px;font-size:12px;}
+  #login-error{color:var(--danger);font-size:13px;margin-top:10px;min-height:16px;}
+  .demo-users{
+    margin-top:20px;
+    font-size:11.5px;
+    color:var(--muted);
+    background:#f5f7f9;
+    border-radius:6px;
+    padding:10px 12px;
+    line-height:1.6;
+  }
+  .demo-users b{color:var(--text);}
+
+  /* ---------- APP SHELL ---------- */
+  #app-screen{min-height:100vh;display:flex;flex-direction:column;}
+  header.topbar{
+    background:var(--navy);
+    color:#fff;
+    padding:14px 26px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  header.topbar .brand{display:flex;align-items:center;gap:10px;}
+  header.topbar .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);}
+  header.topbar .brand h2{margin:0;font-size:17px;letter-spacing:.02em;}
+  header.topbar .brand span{font-size:11px;color:#b9c8d4;display:block;}
+  .session-info{display:flex;align-items:center;gap:14px;font-size:13px;}
+  .role-pill{
+    background:var(--accent);
+    padding:3px 10px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.04em;
+  }
+  main{flex:1;padding:24px 30px;max-width:1200px;width:100%;margin:0 auto;}
+
+  .view-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+  .view-title h1{font-size:20px;margin:0;color:var(--navy);}
+  .view-title p{margin:2px 0 0 0;color:var(--muted);font-size:13px;}
+
+  .panel{background:var(--panel);border-radius:var(--radius);border:1px solid var(--line);padding:18px;margin-bottom:18px;}
+
+  .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+  .filters select, .filters input{
+    padding:8px 10px;border:1px solid var(--line);border-radius:6px;font-size:13px;background:#fbfcfd;
+  }
+
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  thead th{
+    text-align:left;
+    background:#f4f7f9;
+    color:var(--steel);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    padding:10px 8px;
+    border-bottom:2px solid var(--line);
+  }
+  tbody td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:middle;}
+  tbody tr:hover{background:#f8fafb;}
+  .badge{
+    display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;color:#fff;
+  }
+  .badge-nuevo{background:#3d5a73;}
+  .badge-asignado{background:#8556d4;}
+  .badge-proceso{background:var(--warn);}
+  .badge-espera{background:#c07a1e;}
+  .badge-resuelto{background:var(--ok);}
+  .badge-cerrado{background:#555;}
+  .prio-alta{color:var(--danger);font-weight:700;}
+  .prio-media{color:var(--warn);font-weight:700;}
+  .prio-baja{color:var(--ok);font-weight:700;}
+  .actions-cell{display:flex;gap:6px;}
+  .icon-btn{
+    border:1px solid var(--line);background:#fff;border-radius:6px;padding:5px 9px;cursor:pointer;font-size:12px;
+  }
+  .icon-btn:hover{background:#f2f5f7;}
+  .empty-row td{text-align:center;color:var(--muted);padding:26px;font-style:italic;}
+
+  select.assign-select{padding:5px 6px;border-radius:6px;border:1px solid var(--line);font-size:12px;}
+
+  /* modal */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(15,41,66,0.55);
+    display:flex;align-items:center;justify-content:center;z-index:50;
+  }
+  .modal{
+    background:#fff;border-radius:var(--radius);width:520px;max-width:92vw;
+    max-height:88vh;overflow-y:auto;padding:26px;box-shadow:0 25px 60px rgba(0,0,0,.4);
+  }
+  .modal h3{margin:0 0 16px 0;color:var(--navy);font-size:18px;}
+  .modal .field textarea{
+    width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:6px;font-size:13px;min-height:80px;font-family:inherit;
+  }
+  .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;}
+  .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;margin-bottom:6px;}
+  .detail-grid .k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;}
+  .detail-grid .v{font-size:14px;margin-top:2px;}
+
+  footer.appfoot{
+    text-align:center;font-size:11px;color:var(--muted);padding:14px;border-top:1px solid var(--line);background:#fff;
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= LOGIN ================= -->
+<div id="login-screen">
+  <div class="login-card">
+    <span class="tag">TECHSOLUTIONS SAC</span>
+    <h1>Sistema Help Desk</h1>
+    <p style="color:var(--muted);font-size:13px;margin-top:0;margin-bottom:20px;">Ingresa tus credenciales para continuar</p>
+    <div class="field">
+      <label for="login-user">Usuario</label>
+      <input type="text" id="login-user" placeholder="ej. stefano">
+    </div>
+    <div class="field">
+      <label for="login-pass">Contraseña</label>
+      <input type="password" id="login-pass" placeholder="••••••••">
+    </div>
+    <button class="btn btn-primary" onclick="handleLogin()">Iniciar sesión</button>
+    <div id="login-error"></div>
+    <div class="demo-users">
+      <b>Usuarios de prueba</b><br>
+      Usuario: stefano / 1234<br>
+      Administrador: admin / admin123<br>
+      Técnico: carlos / tec123 &nbsp;|&nbsp; Técnico: maria / tec456
+    </div>
+  </div>
+</div>
+
+<!-- ================= APP ================= -->
+<div id="app-screen" class="hidden">
+  <header class="topbar">
+    <div class="brand">
+      <span class="dot"></span>
+      <div>
+        <h2>Help Desk · TechSolutions SAC</h2>
+        <span>Gestión de tickets de soporte</span>
+      </div>
+    </div>
+    <div class="session-info">
+      <span id="session-name"></span>
+      <span class="role-pill" id="session-role"></span>
+      <button class="btn btn-ghost btn-small" onclick="handleLogout()">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ---------- USUARIO: INDEX ---------- -->
+    <section id="view-usuario-index" class="hidden">
+      <div class="view-title">
+        <div>
+          <h1>Mis tickets</h1>
+          <p>Bandeja de tickets que has generado</p>
+        </div>
+        <button class="btn btn-primary" onclick="openCreateModal()">+ Nuevo ticket</button>
+      </div>
+      <div class="panel">
+        <table>
+          <thead><tr>
+            <th>ID</th><th>Asunto</th><th>Usuario</th><th>Categoría</th><th>Prioridad</th><th>Estado</th><th>Asignado a</th><th>Creado</th><th>Acciones</th>
+          </tr></thead>
+          <tbody id="tbl-usuario"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ---------- ADMIN: INDEX ---------- -->
+    <section id="view-admin-index" class="hidden">
+      <div class="view-title">
+        <div>
+          <h1>Panel de administración</h1>
+          <p>Todos los tickets registrados en el sistema</p>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="filters">
+          <select id="f-estado" onchange="renderAdmin()">
+            <option value="">Todos los estados</option>
+            <option>Nuevo</option><option>Asignado</option><option>En proceso</option>
+            <option>En espera</option><option>Resuelto</option><option>Cerrado</option>
+          </select>
+          <select id="f-categoria" onchange="renderAdmin()">
+            <option value="">Todas las categorías</option>
+            <option>ACCESO</option><option>HARDWARE</option><option>SOFTWARE</option><option>RED</option><option>OTROS</option>
+          </select>
+          <select id="f-prioridad" onchange="renderAdmin()">
+            <option value="">Todas las prioridades</option>
+            <option>ALTA</option><option>MEDIA</option><option>BAJA</option>
+          </select>
+          <select id="f-tecnico" onchange="renderAdmin()">
+            <option value="">Todos los técnicos</option>
+          </select>
+          <input type="text" id="f-texto" placeholder="Buscar por asunto o usuario..." oninput="renderAdmin()">
+        </div>
+        <table>
+          <thead><tr>
+            <th>ID</th><th>Asunto</th><th>Usuario</th><th>Categoría</th><th>Prioridad</th><th>Estado</th><th>Asignado a</th><th>Acciones</th>
+          </tr></thead>
+          <tbody id="tbl-admin"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ---------- TECNICO: INDEX ---------- -->
+    <section id="view-tecnico-index" class="hidden">
+      <div class="view-title">
+        <div>
+          <h1>Mis tickets asignados</h1>
+          <p>Tickets que debes atender hasta su cierre</p>
+        </div>
+      </div>
+      <div class="panel">
+        <table>
+          <thead><tr>
+            <th>ID</th><th>Asunto</th><th>Usuario</th><th>Categoría</th><th>Prioridad</th><th>Estado</th><th>Asignado a</th><th>Acciones</th>
+          </tr></thead>
+          <tbody id="tbl-tecnico"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="appfoot">Sistema Help Desk &middot; TechSolutions SAC &middot; Proyecto académico</footer>
+</div>
+
+<!-- ================= MODALES ================= -->
+
+<!-- Crear ticket (Usuario) -->
+<div id="modal-crear" class="modal-overlay hidden">
+  <div class="modal">
+    <h3>Nuevo ticket</h3>
+    <div class="detail-grid" style="margin-bottom:10px;">
+      <div><div class="k">Código automático</div><div class="v" id="crear-codigo">10001</div></div>
+      <div><div class="k">Fecha</div><div class="v" id="crear-fecha"></div></div>
+    </div>
+    <div class="field"><label>Usuario</label><input type="text" id="crear-usuario" disabled></div>
+    <div class="field">
+      <label>Categoría</label>
+      <select id="crear-categoria">
+        <option>ACCESO</option><option>HARDWARE</option><option>SOFTWARE</option><option>RED</option><option>OTROS</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Prioridad</label>
+      <select id="crear-prioridad">
+        <option>ALTA</option><option>MEDIA</option><option>BAJA</option>
+      </select>
+    </div>
+    <div class="field"><label>Asunto</label><input type="text" id="crear-asunto" placeholder="Ej. Necesito acceso al driver de facturación"></div>
+    <div class="field"><label>Descripción</label><textarea id="crear-descripcion" placeholder="Describe el problema con detalle..."></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-crear')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveNewTicket()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Ver detalle (todos los roles) -->
+<div id="modal-ver" class="modal-overlay hidden">
+  <div class="modal">
+    <h3>Detalle del ticket <span id="ver-id"></span></h3>
+    <div class="detail-grid">
+      <div><div class="k">Usuario</div><div class="v" id="ver-usuario"></div></div>
+      <div><div class="k">Fecha creación</div><div class="v" id="ver-fecha"></div></div>
+      <div><div class="k">Categoría</div><div class="v" id="ver-categoria"></div></div>
+      <div><div class="k">Prioridad</div><div class="v" id="ver-prioridad"></div></div>
+      <div><div class="k">Estado</div><div class="v" id="ver-estado"></div></div>
+      <div><div class="k">Asignado a</div><div class="v" id="ver-asignado"></div></div>
+    </div>
+    <div class="field"><label>Asunto</label><div class="v" id="ver-asunto"></div></div>
+    <div class="field"><label>Descripción</label><div class="v" id="ver-descripcion" style="white-space:pre-wrap;"></div></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-ver')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Editar ticket (Usuario) -->
+<div id="modal-editar-usuario" class="modal-overlay hidden">
+  <div class="modal">
+    <h3>Editar ticket <span id="eu-id"></span></h3>
+    <div class="field">
+      <label>Categoría</label>
+      <select id="eu-categoria"><option>ACCESO</option><option>HARDWARE</option><option>SOFTWARE</option><option>RED</option><option>OTROS</option></select>
+    </div>
+    <div class="field">
+      <label>Prioridad</label>
+      <select id="eu-prioridad"><option>ALTA</option><option>MEDIA</option><option>BAJA</option></select>
+    </div>
+    <div class="field"><label>Asunto</label><input type="text" id="eu-asunto"></div>
+    <div class="field"><label>Descripción</label><textarea id="eu-descripcion"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-editar-usuario')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveEditUsuario()">Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
+<!-- Editar / Cambiar estado (Técnico) -->
+<div id="modal-editar-tecnico" class="modal-overlay hidden">
+  <div class="modal">
+    <h3>Atender ticket <span id="et-id"></span></h3>
+    <div class="detail-grid" style="margin-bottom:14px;">
+      <div><div class="k">Usuario</div><div class="v" id="et-usuario"></div></div>
+      <div><div class="k">Prioridad</div><div class="v" id="et-prioridad"></div></div>
+    </div>
+    <div class="field"><label>Asunto</label><div class="v" id="et-asunto"></div></div>
+    <div class="field"><label>Descripción</label><div class="v" id="et-descripcion" style="white-space:pre-wrap;"></div></div>
+    <div class="field">
+      <label>Cambiar estado</label>
+      <select id="et-estado">
+        <option value="En proceso">En proceso — el técnico está trabajando</option>
+        <option value="En espera">En espera — esperando información del usuario</option>
+        <option value="Resuelto">Resuelto — problema solucionado</option>
+        <option value="Cerrado">Cerrado — ticket finalizado</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-editar-tecnico')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveEditTecnico()">Actualizar estado</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ==========================================================
+   USUARIOS DEL SISTEMA (demo, credenciales fijas)
+   ========================================================== */
+const USERS = [
+  { username:"stefano", password:"1234",     role:"usuario",   nombre:"STEFANO" },
+  { username:"admin",   password:"admin123", role:"admin",     nombre:"ADMINISTRADOR" },
+  { username:"carlos",  password:"tec123",   role:"tecnico",   nombre:"CARLOS RAMIREZ" },
+  { username:"maria",   password:"tec456",   role:"tecnico",   nombre:"MARIA LOPEZ" },
+];
+const TECNICOS = USERS.filter(u => u.role === "tecnico");
+
+/* ==========================================================
+   PERSISTENCIA (localStorage simula la base de datos)
+   ========================================================== */
+const DB_KEY = "helpdesk_tickets_v1";
+const SEQ_KEY = "helpdesk_seq_v1";
+
+function loadTickets(){
+  const raw = localStorage.getItem(DB_KEY);
+  if(raw) return JSON.parse(raw);
+  // Datos semilla según el caso del enunciado
+  const seed = [
+    {
+      id: 10001,
+      fecha: "30/06/2026",
+      usuario: "STEFANO",
+      categoria: "ACCESO",
+      prioridad: "ALTA",
+      asunto: "NECESITO ACCESO AL DRIVER DE FACTURACION",
+      descripcion: "Solicito que se me otorgue acceso al driver de facturación para poder emitir comprobantes.",
+      estado: "Nuevo",
+      asignadoA: ""
+    }
+  ];
+  localStorage.setItem(DB_KEY, JSON.stringify(seed));
+  localStorage.setItem(SEQ_KEY, "10002");
+  return seed;
+}
+function saveTickets(list){ localStorage.setItem(DB_KEY, JSON.stringify(list)); }
+function nextId(){
+  let seq = parseInt(localStorage.getItem(SEQ_KEY) || "10002", 10);
+  localStorage.setItem(SEQ_KEY, String(seq + 1));
+  return seq;
+}
+
+let tickets = loadTickets();
+let currentUser = null;
+
+/* ==========================================================
+   LOGIN / LOGOUT
+   ========================================================== */
+function handleLogin(){
+  const u = document.getElementById("login-user").value.trim().toLowerCase();
+  const p = document.getElementById("login-pass").value;
+  const found = USERS.find(x => x.username === u && x.password === p);
+  const err = document.getElementById("login-error");
+  if(!found){
+    err.textContent = "Usuario o contraseña incorrectos.";
+    return;
+  }
+  err.textContent = "";
+  currentUser = found;
+  document.getElementById("login-screen").classList.add("hidden");
+  document.getElementById("app-screen").classList.remove("hidden");
+  document.getElementById("session-name").textContent = found.nombre;
+  document.getElementById("session-role").textContent =
+    found.role === "usuario" ? "USUARIO" : found.role === "admin" ? "ADMINISTRADOR" : "TÉCNICO";
+  showRoleView();
+}
+
+function handleLogout(){
+  currentUser = null;
+  document.getElementById("login-user").value = "";
+  document.getElementById("login-pass").value = "";
+  document.getElementById("app-screen").classList.add("hidden");
+  document.getElementById("login-screen").classList.remove("hidden");
+  ["view-usuario-index","view-admin-index","view-tecnico-index"].forEach(id=>{
+    document.getElementById(id).classList.add("hidden");
+  });
+}
+
+function showRoleView(){
+  document.getElementById("view-usuario-index").classList.add("hidden");
+  document.getElementById("view-admin-index").classList.add("hidden");
+  document.getElementById("view-tecnico-index").classList.add("hidden");
+
+  if(currentUser.role === "usuario"){
+    document.getElementById("view-usuario-index").classList.remove("hidden");
+    renderUsuario();
+  } else if(currentUser.role === "admin"){
+    document.getElementById("view-admin-index").classList.remove("hidden");
+    populateTecnicoFilter();
+    renderAdmin();
+  } else if(currentUser.role === "tecnico"){
+    document.getElementById("view-tecnico-index").classList.remove("hidden");
+    renderTecnico();
+  }
+}
+
+/* ==========================================================
+   HELPERS DE PRESENTACIÓN
+   ========================================================== */
+function badgeFor(estado){
+  const map = {
+    "Nuevo":"badge-nuevo","Asignado":"badge-asignado","En proceso":"badge-proceso",
+    "En espera":"badge-espera","Resuelto":"badge-resuelto","Cerrado":"badge-cerrado"
+  };
+  return `<span class="badge ${map[estado] || 'badge-nuevo'}">${estado}</span>`;
+}
+function prioClass(p){
+  return p === "ALTA" ? "prio-alta" : p === "MEDIA" ? "prio-media" : "prio-baja";
+}
+function todayStr(){
+  const d = new Date();
+  return String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0")+"/"+d.getFullYear();
+}
+
+/* ==========================================================
+   VISTA USUARIO
+   ========================================================== */
+function renderUsuario(){
+  const tbody = document.getElementById("tbl-usuario");
+  const mine = tickets.filter(t => t.usuario === currentUser.nombre);
+  if(mine.length === 0){
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="9">Todavía no has creado ningún ticket.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = mine.map(t => `
+    <tr>
+      <td>${t.id}</td>
+      <td>${t.asunto}</td>
+      <td>${t.usuario}</td>
+      <td>${t.categoria}</td>
+      <td class="${prioClass(t.prioridad)}">${t.prioridad}</td>
+      <td>${badgeFor(t.estado)}</td>
+      <td>${t.asignadoA || "Por asignar"}</td>
+      <td>${t.fecha}</td>
+      <td class="actions-cell">
+        <button class="icon-btn" onclick="openVerModal(${t.id})">Ver</button>
+        <button class="icon-btn" onclick="openEditUsuarioModal(${t.id})">Editar</button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+function openCreateModal(){
+  document.getElementById("crear-codigo").textContent = nextIdPreview();
+  document.getElementById("crear-fecha").textContent = todayStr();
+  document.getElementById("crear-usuario").value = currentUser.nombre;
+  document.getElementById("crear-categoria").value = "ACCESO";
+  document.getElementById("crear-prioridad").value = "ALTA";
+  document.getElementById("crear-asunto").value = "";
+  document.getElementById("crear-descripcion").value = "";
+  document.getElementById("modal-crear").classList.remove("hidden");
+}
+function nextIdPreview(){
+  return localStorage.getItem(SEQ_KEY) || "10002";
+}
+function saveNewTicket(){
+  const asunto = document.getElementById("crear-asunto").value.trim();
+  if(!asunto){ alert("Por favor ingresa el asunto del ticket."); return; }
+  const nuevo = {
+    id: nextId(),
+    fecha: todayStr(),
+    usuario: currentUser.nombre,
+    categoria: document.getElementById("crear-categoria").value,
+    prioridad: document.getElementById("crear-prioridad").value,
+    asunto: asunto,
+    descripcion: document.getElementById("crear-descripcion").value.trim(),
+    estado: "Nuevo",
+    asignadoA: ""
+  };
+  tickets.unshift(nuevo);
+  saveTickets(tickets);
+  closeModal("modal-crear");
+  renderUsuario();
+}
+
+function openEditUsuarioModal(id){
+  const t = tickets.find(x => x.id === id);
+  if(!t) return;
+  document.getElementById("eu-id").textContent = "#" + t.id;
+  document.getElementById("eu-categoria").value = t.categoria;
+  document.getElementById("eu-prioridad").value = t.prioridad;
+  document.getElementById("eu-asunto").value = t.asunto;
+  document.getElementById("eu-descripcion").value = t.descripcion;
+  document.getElementById("modal-editar-usuario").dataset.editingId = id;
+  document.getElementById("modal-editar-usuario").classList.remove("hidden");
+}
+function saveEditUsuario(){
+  const id = parseInt(document.getElementById("modal-editar-usuario").dataset.editingId, 10);
+  const t = tickets.find(x => x.id === id);
+  if(!t) return;
+  t.categoria = document.getElementById("eu-categoria").value;
+  t.prioridad = document.getElementById("eu-prioridad").value;
+  t.asunto = document.getElementById("eu-asunto").value.trim();
+  t.descripcion = document.getElementById("eu-descripcion").value.trim();
+  saveTickets(tickets);
+  closeModal("modal-editar-usuario");
+  renderUsuario();
+}
+
+/* ==========================================================
+   VISTA ADMINISTRADOR
+   ========================================================== */
+function populateTecnicoFilter(){
+  const sel = document.getElementById("f-tecnico");
+  sel.innerHTML = `<option value="">Todos los técnicos</option>` +
+    TECNICOS.map(t => `<option value="${t.nombre}">${t.nombre}</option>`).join("");
+}
+
+function renderAdmin(){
+  const estado = document.getElementById("f-estado").value;
+  const categoria = document.getElementById("f-categoria").value;
+  const prioridad = document.getElementById("f-prioridad").value;
+  const tecnico = document.getElementById("f-tecnico").value;
+  const texto = document.getElementById("f-texto").value.trim().toLowerCase();
+
+  let filtered = tickets.filter(t => {
+    if(estado && t.estado !== estado) return false;
+    if(categoria && t.categoria !== categoria) return false;
+    if(prioridad && t.prioridad !== prioridad) return false;
+    if(tecnico && t.asignadoA !== tecnico) return false;
+    if(texto && !(t.asunto.toLowerCase().includes(texto) || t.usuario.toLowerCase().includes(texto))) return false;
+    return true;
+  });
+
+  const tbody = document.getElementById("tbl-admin");
+  if(filtered.length === 0){
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="8">No se encontraron tickets con los filtros seleccionados.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(t => `
+    <tr>
+      <td>${t.id}</td>
+      <td>${t.asunto}</td>
+      <td>${t.usuario}</td>
+      <td>${t.categoria}</td>
+      <td class="${prioClass(t.prioridad)}">${t.prioridad}</td>
+      <td>${badgeFor(t.estado)}</td>
+      <td>
+        <select class="assign-select" onchange="assignTecnico(${t.id}, this.value)">
+          <option value="">Por asignar</option>
+          ${TECNICOS.map(tec => `<option value="${tec.nombre}" ${t.asignadoA===tec.nombre?"selected":""}>${tec.nombre}</option>`).join("")}
+        </select>
+      </td>
+      <td class="actions-cell">
+        <button class="icon-btn" onclick="openVerModal(${t.id})">Ver</button>
+        <button class="icon-btn" onclick="openEditUsuarioModal(${t.id})">Editar</button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+function assignTecnico(id, tecnicoNombre){
+  const t = tickets.find(x => x.id === id);
+  if(!t) return;
+  t.asignadoA = tecnicoNombre;
+  t.estado = tecnicoNombre ? "Asignado" : "Nuevo";
+  saveTickets(tickets);
+  renderAdmin();
+}
+
+/* ==========================================================
+   VISTA TECNICO
+   ========================================================== */
+function renderTecnico(){
+  const tbody = document.getElementById("tbl-tecnico");
+  const mine = tickets.filter(t => t.asignadoA === currentUser.nombre);
+  if(mine.length === 0){
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="8">No tienes tickets asignados por el momento.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = mine.map(t => `
+    <tr>
+      <td>${t.id}</td>
+      <td>${t.asunto}</td>
+      <td>${t.usuario}</td>
+      <td>${t.categoria}</td>
+      <td class="${prioClass(t.prioridad)}">${t.prioridad}</td>
+      <td>${badgeFor(t.estado)}</td>
+      <td>${t.asignadoA}</td>
+      <td class="actions-cell">
+        <button class="icon-btn" onclick="openVerModal(${t.id})">Ver</button>
+        <button class="icon-btn" onclick="openEditTecnicoModal(${t.id})">Editar</button>
+        <button class="icon-btn" onclick="deleteTicketTecnico(${t.id})">Eliminar</button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+function openEditTecnicoModal(id){
+  const t = tickets.find(x => x.id === id);
+  if(!t) return;
+  document.getElementById("et-id").textContent = "#" + t.id;
+  document.getElementById("et-usuario").textContent = t.usuario;
+  document.getElementById("et-prioridad").textContent = t.prioridad;
+  document.getElementById("et-asunto").textContent = t.asunto;
+  document.getElementById("et-descripcion").textContent = t.descripcion || "(sin descripción)";
+  document.getElementById("et-estado").value = ["En proceso","En espera","Resuelto","Cerrado"].includes(t.estado) ? t.estado : "En proceso";
+  document.getElementById("modal-editar-tecnico").dataset.editingId = id;
+  document.getElementById("modal-editar-tecnico").classList.remove("hidden");
+}
+function saveEditTecnico(){
+  const id = parseInt(document.getElementById("modal-editar-tecnico").dataset.editingId, 10);
+  const t = tickets.find(x => x.id === id);
+  if(!t) return;
+  t.estado = document.getElementById("et-estado").value;
+  saveTickets(tickets);
+  closeModal("modal-editar-tecnico");
+  renderTecnico();
+}
+function deleteTicketTecnico(id){
+  if(!confirm("¿Seguro que deseas eliminar este ticket? Esta acción no se puede deshacer.")) return;
+  tickets = tickets.filter(t => t.id !== id);
+  saveTickets(tickets);
+  renderTecnico();
+}
+
+/* ==========================================================
+   MODAL VER DETALLE (compartido por los 3 roles)
+   ========================================================== */
+function openVerModal(id){
+  const t = tickets.find(x => x.id === id);
+  if(!t) return;
+  document.getElementById("ver-id").textContent = "#" + t.id;
+  document.getElementById("ver-usuario").textContent = t.usuario;
+  document.getElementById("ver-fecha").textContent = t.fecha;
+  document.getElementById("ver-categoria").textContent = t.categoria;
+  document.getElementById("ver-prioridad").textContent = t.prioridad;
+  document.getElementById("ver-estado").innerHTML = badgeFor(t.estado);
+  document.getElementById("ver-asignado").textContent = t.asignadoA || "Por asignar";
+  document.getElementById("ver-asunto").textContent = t.asunto;
+  document.getElementById("ver-descripcion").textContent = t.descripcion || "(sin descripción)";
+  document.getElementById("modal-ver").classList.remove("hidden");
+}
+
+function closeModal(id){
+  document.getElementById(id).classList.add("hidden");
+}
+
+/* Enter para iniciar sesión */
+document.getElementById("login-pass").addEventListener("keydown", e => {
+  if(e.key === "Enter") handleLogin();
+});
+</script>
+</body>
+</html>
